@@ -23,7 +23,7 @@
 import pygame
 import time
 import os, sys
-import Image
+from PIL import Image
 import random
 import math
 import time
@@ -33,7 +33,12 @@ imagename = "image.jpg";
 if (len(sys.argv) >= 2):
   imagename = sys.argv[1];
 
+parts  = imagename.split('.')
+outname = 'output/'+'.'.join(parts[:-1])+'_out.png'
+
 im = Image.open(imagename)
+im = im.convert("L")
+im.save("gray.png")
 
 pix = im.load()
 image_width = 0.0 + im.size[0];
@@ -48,8 +53,13 @@ osy = 0;
 
 black = (0, 0, 0)
 white = (255, 255, 255)
-nlayers = 15;
-linespacing = 20;
+nlayers = 10;
+linespacing = 30;
+
+try:
+  os.mkdir('output')
+except OSError:
+  pass
 
 myfile = open('lines.txt', 'w+');
 
@@ -150,10 +160,10 @@ for i in range(1, nlayers):
 
 myfile.close();
 
-pygame.image.save(screen, "output.png");
+pygame.image.save(screen, outname)
 print
 print
-print "Saved output image to output.png"
+print "Saved output image to %s"%outname
 print
 print
 
